@@ -6,6 +6,8 @@ le numéro publié.
 
 ## [Non publié]
 
+## [1.1.0] — 2026-09-23
+
 ### Nouveautés
 
 - **Ligne de temps illustrée dans le montage** : bande d'images extraite de la

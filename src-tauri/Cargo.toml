@@ -1,6 +1,6 @@
 [package]
 name = "fastcap"
-version = "1.0.0"
+version = "1.1.0"
 description = "Application de capture d'écran complète - capture, annotation, OCR, gestion, export"
 authors = ["FastCap Team"]
 edition = "2021"
