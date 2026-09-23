@@ -90,8 +90,13 @@ impl PackageManager {
 }
 
 fn binary_exists(name: &str) -> bool {
+    // La commande doit vivre dans une liaison nommée : `Command::new(..).arg(..)`
+    // rend une référence au temporaire, libéré en fin d'instruction.
     #[cfg(target_os = "windows")]
-    let probe = Command::new("where").arg(name).stdout(Stdio::null()).stderr(Stdio::null());
+    let mut command = Command::new("where");
+    #[cfg(target_os = "windows")]
+    let probe = command.arg(name).stdout(Stdio::null()).stderr(Stdio::null());
+
     #[cfg(not(target_os = "windows"))]
     let mut command = Command::new("sh");
     #[cfg(not(target_os = "windows"))]

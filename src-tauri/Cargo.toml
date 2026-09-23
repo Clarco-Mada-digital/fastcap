@@ -21,7 +21,18 @@ tracing-appender = "0.2"
 # Tauri + plugins
 # `protocol-asset` autorise le webview à lire les fichiers locaux : c'est ce
 # qui permet de relire un enregistrement dans le lecteur intégré.
-tauri = { version = "2", features = ["tray-icon", "image-png", "image-ico", "protocol-asset"] }
+# `macos-private-api` autorise les fenêtres transparentes sous macOS : sans
+# elle, `.transparent(true)` n'existe même pas et la compilation échoue. C'est
+# ce qui permet à l'indicateur « ● REC » de flotter sans cadre opaque. En
+# contrepartie, l'application ne peut pas être publiée sur le Mac App Store —
+# sans importance ici, elle se distribue en `.dmg`.
+tauri = { version = "2", features = [
+    "tray-icon",
+    "image-png",
+    "image-ico",
+    "protocol-asset",
+    "macos-private-api",
+] }
 tauri-plugin-opener = "2"
 tauri-plugin-clipboard-manager = "2"
 tauri-plugin-notification = "2"
