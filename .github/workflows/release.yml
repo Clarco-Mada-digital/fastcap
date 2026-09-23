@@ -97,6 +97,12 @@ jobs:
 
       - run: npm ci
 
+      # `tauri::generate_context!` lit `frontendDist` (« ../dist ») au moment
+      # de la compilation. Ce dossier n'est pas versionné : sans cette étape,
+      # même `cargo test` échoue, avant tout empaquetage.
+      - name: Frontend
+        run: npm run build
+
       # Les tests qui exigent un écran, une caméra ou ffmpeg sont marqués
       # `#[ignore]` : seuls les tests unitaires tournent ici.
       - name: Tests
