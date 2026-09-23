@@ -1,0 +1,363 @@
+/* Ruban de montage : bande d'images, forme d'onde et repères */
+
+.tl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tl-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.tl-range {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.tl-zoom {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tl-zoom-btn {
+  min-width: 24px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary, #1e2430);
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tl-zoom-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.tl-zoom-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.tl-zoom-reset {
+  font-size: 11px;
+}
+
+.tl-zoom-level {
+  min-width: 34px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Piste */
+
+.tl-lane {
+  position: relative;
+  height: 112px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0b0f17;
+  border: 1px solid var(--border);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+
+.tl-lane.is-dragging {
+  cursor: grabbing;
+}
+
+/* Bande d'images */
+
+.tl-film {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 52px;
+  overflow: hidden;
+  background: #05070c;
+}
+
+.tl-film img {
+  position: absolute;
+  top: 0;
+  height: 52px;
+  object-fit: cover;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.tl-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Forme d'onde */
+
+.tl-wave {
+  position: absolute;
+  inset: 52px 0 0 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(8, 12, 20, 0.9));
+  border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.tl-wave canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tl-nosound {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Silences repérés */
+
+.tl-silence {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  background: rgba(148, 163, 184, 0.55);
+  pointer-events: none;
+}
+
+/* Hors des bornes de début / fin */
+
+.tl-outside {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(3, 6, 12, 0.72);
+  pointer-events: none;
+}
+
+/* Zones tracées : passages retirés et passages muets */
+
+.tl-region {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Un passage retiré emporte l'image : il barre toute la hauteur */
+.tl-cut {
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(248, 113, 113, 0.4) 0 6px,
+    rgba(248, 113, 113, 0.16) 6px 12px
+  );
+  border-left: 1px solid rgba(248, 113, 113, 0.85);
+  border-right: 1px solid rgba(248, 113, 113, 0.85);
+}
+
+.tl-cut.is-selected {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(248, 113, 113, 0.62) 0 6px,
+    rgba(248, 113, 113, 0.3) 6px 12px
+  );
+  box-shadow: inset 0 0 0 1px #fca5a5;
+}
+
+/* Un passage muet ne touche que le son : il se limite à la forme d'onde */
+.tl-mute {
+  top: 52px;
+  bottom: 0;
+  background: rgba(251, 191, 36, 0.3);
+  border-left: 1px solid rgba(251, 191, 36, 0.9);
+  border-right: 1px solid rgba(251, 191, 36, 0.9);
+}
+
+.tl-mute.is-selected {
+  background: rgba(251, 191, 36, 0.5);
+  box-shadow: inset 0 0 0 1px #fcd34d;
+}
+
+.tl-region-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tl-region-undo {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.8);
+  color: #fecaca;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tl-region-undo:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* Poignées : une cible large, un trait fin */
+
+.tl-region-grip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+}
+
+.tl-grip-left {
+  left: -5px;
+}
+
+.tl-grip-right {
+  right: -5px;
+}
+
+.tl-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 14px;
+  margin-left: -7px;
+  cursor: ew-resize;
+  z-index: 3;
+}
+
+.tl-handle-grip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  width: 2px;
+  background: var(--accent, #22d3ee);
+}
+
+.tl-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 1px;
+  width: 12px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 3px;
+  background: var(--accent, #22d3ee);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.tl-handle-start::after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tl-handle-end::after {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.tl-handle:hover::after {
+  filter: brightness(1.2);
+}
+
+/* Tête de lecture */
+
+.tl-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.tl-playhead-cap {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0b0f17;
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tl-hover {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+/* Graduations */
+
+.tl-ruler {
+  position: relative;
+  height: 14px;
+}
+
+.tl-ruler span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tl-hint {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.tl-hint kbd {
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg-tertiary, #1e2430);
+  font-family: inherit;
+  font-size: 10px;
+  color: var(--text-secondary);
+}

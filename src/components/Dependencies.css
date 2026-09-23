@@ -1,0 +1,235 @@
+/* Panneau des dépendances externes */
+
+.deps-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(3, 6, 12, 0.78);
+  backdrop-filter: blur(5px);
+}
+
+.deps-shell {
+  display: flex;
+  flex-direction: column;
+  width: min(680px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.deps-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.deps-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.deps-header p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.deps-header > div:first-child {
+  flex: 1;
+}
+
+.deps-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.deps-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 24px;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.dep-card {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+}
+
+.dep-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.dep-state.ok {
+  background: rgba(52, 211, 153, 0.14);
+  color: #34d399;
+}
+
+.dep-state.missing {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fbbf24;
+}
+
+.dep-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dep-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dep-tag {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--bg-tertiary, #1e2430);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.dep-tag.required {
+  background: rgba(251, 191, 36, 0.14);
+  color: #fbbf24;
+}
+
+.dep-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.dep-version,
+.dep-command {
+  display: block;
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: var(--bg-tertiary, #1e2430);
+  color: var(--text-muted);
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.dep-manual {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.dep-outcome {
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.dep-outcome.ok {
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: #34d399;
+}
+
+.dep-outcome.error {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  color: var(--error);
+}
+
+.dep-outcome details {
+  margin-top: 6px;
+}
+
+.dep-outcome summary {
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.dep-outcome pre {
+  margin: 6px 0 0;
+  padding: 8px;
+  max-height: 180px;
+  overflow: auto;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.dep-action {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.dep-ok-label {
+  font-size: 12px;
+  color: #34d399;
+}
+
+.deps-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.deps-footer p {
+  flex: 1;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Indicateur d'attente, partagé avec le panneau d'enregistrement */
+.spinner {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

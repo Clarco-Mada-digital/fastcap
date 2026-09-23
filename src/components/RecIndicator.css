@@ -1,0 +1,123 @@
+/* La fenêtre "rec-indicator" est transparente : seul le badge REC est visible */
+html,
+body,
+#root {
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.rec-indicator {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(10, 10, 14, 0.82);
+  border: 1px solid rgba(248, 113, 113, 0.55);
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  backdrop-filter: blur(6px);
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+.rec-indicator--off {
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.rec-indicator--on {
+  animation: rec-indicator-in 0.25s ease-out;
+}
+
+@keyframes rec-indicator-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rec-indicator__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: rec-indicator-pulse 1.4s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes rec-indicator-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.rec-indicator__label {
+  font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #fecaca;
+}
+
+.rec-indicator__time {
+  font-family: "SF Mono", "JetBrains Mono", Consolas, monospace;
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+  min-width: 96px;
+  text-align: left;
+}
+/* Ligne du minuteur */
+.rec-indicator__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* État de l'incrustation, seul retour visible pendant la capture */
+.rec-indicator__live {
+  padding: 5px 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.07);
+  color: #e2e8f0;
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mise en avant du dernier ajustement */
+.rec-indicator__live--flash {
+  background: rgba(34, 211, 238, 0.18);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  color: #a5f3fc;
+  font-weight: 600;
+  animation: rec-live-flash 0.28s ease-out;
+}
+
+@keyframes rec-live-flash {
+  from {
+    transform: scale(0.94);
+    opacity: 0.4;
+  }
+}

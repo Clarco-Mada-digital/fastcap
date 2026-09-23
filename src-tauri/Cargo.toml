@@ -1,0 +1,57 @@
+[package]
+name = "fastcap"
+version = "1.0.0"
+description = "Application de capture d'écran complète - capture, annotation, OCR, gestion, export"
+authors = ["FastCap Team"]
+edition = "2021"
+
+[lib]
+name = "fastcap_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-appender = "0.2"
+
+# Tauri + plugins
+# `protocol-asset` autorise le webview à lire les fichiers locaux : c'est ce
+# qui permet de relire un enregistrement dans le lecteur intégré.
+tauri = { version = "2", features = ["tray-icon", "image-png", "image-ico", "protocol-asset"] }
+tauri-plugin-opener = "2"
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-dialog = "2"
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Chemins systèmes
+dirs = "5"
+
+# Encodage base64 des data URLs
+base64 = "0.22"
+
+# Traitement d'image
+image = "0.25"
+
+# Capture d'écran et énumération de fenêtres (Windows / macOS / Linux).
+# 0.4 est retenu volontairement : les versions >= 0.5 tirent `pipewire` sur Linux,
+# ce qui impose d'installer libpipewire-0.3-dev sur la machine de build.
+xcap = { version = "0.4", features = ["image"] }
+
+# Identifiants uniques des captures
+uuid = { version = "1", features = ["v4"] }
+
+# Date / heure
+chrono = "0.4"
+
+[features]
+# Utilisé pour les builds de production (sans serveur de dev)
+custom-protocol = ["tauri/custom-protocol"]
+default = ["custom-protocol"]

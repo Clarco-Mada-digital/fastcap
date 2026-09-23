@@ -1,0 +1,205 @@
+/* =======================================================
+   fastcap - Thème global
+   Identité : fond profonds, surfaces vitrées, accent cyan
+   Choisissable en Clair / Sombre / Système via `data-theme`.
+   ======================================================= */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Accent de marque (peut être remplacé depuis les réglages) */
+  --primary: #22d3ee;
+  --primary-dark: #0ea5c4;
+  --primary-glow: rgba(34, 211, 238, 0.28);
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.22);
+
+  /* Dégradé de marque */
+  --gradient-brand: linear-gradient(135deg, #22d3ee 0%, #38bdf8 50%, #8b5cf6 100%);
+
+  /* Couleurs de fond */
+  --bg-app: #0a0c11;
+  --bg-primary: #0f1218;
+  --bg-secondary: #161b24;
+  --bg-tertiary: #1e2632;
+  --bg-elevated: #242e3d;
+  --bg-inset: #0b0e14;
+
+  /* Couleurs de texte */
+  --text-primary: #e8edf6;
+  --text-secondary: #9aa7ba;
+  --text-muted: #5f6c80;
+
+  /* Couleurs d'état */
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
+
+  /* Bordures */
+  --border: #212837;
+  --border-light: #2e3850;
+
+  /* Ombres */
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 0 22px var(--primary-glow);
+
+  /* Typographie : polices locales d'abord (fonctionne hors-ligne) */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu,
+    'Cantarell', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Cascadia Code', ui-monospace,
+    'Segoe UI Mono', monospace;
+
+  /* Transitions */
+  --transition-fast: 140ms ease;
+  --transition-normal: 240ms ease;
+  --transition-slow: 380ms ease;
+
+  /* Rayons */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --primary: #0891b2;
+  --primary-dark: #0e7490;
+  --primary-glow: rgba(8, 145, 178, 0.16);
+  --accent: #7c3aed;
+  --accent-glow: rgba(124, 58, 237, 0.14);
+  --gradient-brand: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 50%, #7c3aed 100%);
+
+  --bg-app: #eef1f6;
+  --bg-primary: #f6f8fc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9edf4;
+  --bg-elevated: #dfe5ef;
+  --bg-inset: #eef1f6;
+
+  --text-primary: #151a24;
+  --text-secondary: #4b5568;
+  --text-muted: #8792a6;
+
+  --success: #0e9f6e;
+  --warning: #b45309;
+  --error: #dc2626;
+  --info: #2563eb;
+
+  --border: #d8deea;
+  --border-light: #c5cddd;
+
+  --shadow-sm: 0 2px 10px rgba(20, 30, 60, 0.08);
+  --shadow-md: 0 6px 20px rgba(20, 30, 60, 0.1);
+  --shadow-lg: 0 12px 40px rgba(20, 30, 60, 0.14);
+  --shadow-glow: 0 0 22px var(--primary-glow);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+/* Barre de défilement personnalisée */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 2px solid var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--bg-primary);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+kbd {
+  font-family: var(--font-mono);
+}
+
+/* Animations utilitaires */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

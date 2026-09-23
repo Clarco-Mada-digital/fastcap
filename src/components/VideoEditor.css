@@ -1,0 +1,392 @@
+/* Montage vidéo */
+
+.editor-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 230;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(3, 6, 12, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.veditor {
+  display: flex;
+  flex-direction: column;
+  width: min(1120px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.veditor-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.veditor-header > div:first-child {
+  flex: 1;
+  min-width: 0;
+}
+
+.veditor-header h2 {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+/* Annuler / rétablir */
+.veditor-history {
+  display: flex;
+  gap: 2px;
+}
+
+.veditor-history .icon-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.veditor-header p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.veditor-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  gap: 18px;
+  padding: 18px 20px;
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .veditor-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Aperçu */
+
+.veditor-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.veditor-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #05070c;
+  border: 1px solid var(--border);
+  min-height: 220px;
+}
+
+/* Voile des fondus, superposé à l'aperçu */
+.veditor-fade {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  pointer-events: none;
+}
+
+/* Carton de titre tel qu'il ouvrira le montage */
+.veditor-titlecard {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.veditor-titlecard strong {
+  font-size: clamp(20px, 4vw, 34px);
+  font-weight: 700;
+}
+
+.veditor-titlecard span {
+  font-size: clamp(12px, 2vw, 17px);
+  opacity: 0.85;
+}
+
+/* Les dégradés reprennent ceux du rendu (voir visuals.rs) */
+.veditor-titlecard.backdrop-none {
+  background: #0b0f17;
+}
+.veditor-titlecard.backdrop-aurora {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+}
+.veditor-titlecard.backdrop-sunset {
+  background: linear-gradient(135deg, #fb923c, #f43f5e);
+}
+.veditor-titlecard.backdrop-mint {
+  background: linear-gradient(135deg, #10b981, #38bdf8);
+}
+.veditor-titlecard.backdrop-slate {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+}
+.veditor-titlecard.backdrop-cream {
+  background: linear-gradient(135deg, #fef3c7, #fdba74);
+  color: #422006;
+  text-shadow: none;
+}
+
+/* Conteneur ajusté à l'image : les surcouches (fondu, carton, cadre de
+   recadrage) se calent dessus et non sur le plateau, qui est plus large. */
+.veditor-frame {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.veditor-stage video {
+  display: block;
+  max-width: 100%;
+  max-height: 46vh;
+  cursor: pointer;
+}
+
+.veditor-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 48px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.veditor-transport {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.veditor-sep {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* Afficher la lecture telle que sera la vidéo produite */
+.veditor-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.veditor-final {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.veditor-final strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.veditor-marks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Choix de l'outil du ruban */
+
+.veditor-tools {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.veditor-segmented {
+  display: inline-flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.veditor-segmented button {
+  padding: 5px 12px;
+  border: none;
+  background: var(--bg-tertiary, #1e2430);
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.veditor-segmented button + button {
+  border-left: 1px solid var(--border);
+}
+
+.veditor-segmented button.active {
+  background: var(--accent, #22d3ee);
+  color: #04202a;
+  font-weight: 600;
+}
+
+.veditor-segmented button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Rangées de choix courts (vitesse, proportions) */
+
+.veditor-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.veditor-choice {
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.veditor-choice:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.veditor-choice.active {
+  border-color: var(--accent);
+  background: rgba(34, 211, 238, 0.16);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Réglages */
+
+.veditor-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+/* Récapitulatif de la découpe */
+.veditor-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.veditor-summary strong {
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.setting-input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.setting-input:focus {
+  border-color: var(--accent);
+}
+
+/* Pied de page */
+
+.veditor-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.veditor-footer > span:first-child,
+.veditor-footer .rec-muted {
+  flex: 1;
+  min-width: 200px;
+}
+
+.veditor-error {
+  flex: 1;
+  min-width: 200px;
+  color: var(--error);
+  font-size: 12px;
+  word-break: break-word;
+}
+
+.veditor-done {
+  flex: 1;
+  min-width: 200px;
+  color: #34d399;
+  font-size: 12px;
+}
+
+.veditor-progress {
+  position: relative;
+  flex: 1 1 200px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--bg-tertiary, #1e2430);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.veditor-progress-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #22d3ee, #0ea5e9);
+  transition: width 0.25s ease;
+}
+
+.veditor-progress span {
+  position: relative;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}

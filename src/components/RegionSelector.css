@@ -1,0 +1,110 @@
+/* Fenêtre de sélection de région */
+
+.region-selector {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #05070c;
+  cursor: crosshair;
+  user-select: none;
+}
+
+.region-freeze {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.region-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.region-dim {
+  position: absolute;
+  background: rgba(5, 7, 12, 0.55);
+  pointer-events: none;
+}
+
+.region-frame {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid #22d3ee;
+  box-shadow:
+    0 0 0 1px rgba(5, 7, 12, 0.6),
+    0 0 18px rgba(34, 211, 238, 0.45);
+  border-radius: 2px;
+}
+
+.region-size {
+  position: absolute;
+  pointer-events: none;
+  transform: translateY(-100%);
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(15, 19, 30, 0.92);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  color: #e2e8f0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.region-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 36px;
+  transform: translateX(-50%);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(15, 19, 30, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #cbd5e1;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.region-hint kbd {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(148, 163, 184, 0.18);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.region-error {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 28px 32px;
+  border-radius: 12px;
+  background: rgba(15, 19, 30, 0.96);
+  border: 1px solid rgba(255, 107, 107, 0.35);
+  color: #e2e8f0;
+  text-align: center;
+  cursor: default;
+}
+
+.region-error button {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(148, 163, 184, 0.12);
+  color: #e2e8f0;
+  cursor: pointer;
+  font-size: 13px;
+}

@@ -1,0 +1,115 @@
+name: Release
+
+# Déclenché par le tag posé par `npm run release <version>`.
+# Chaque plateforme compile son propre installeur : Tauri ne sait pas produire
+# un binaire macOS ou Windows depuis Linux.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # La note de version est construite une seule fois, puis réutilisée par
+  # toutes les plateformes : sans cela, chaque job en publierait une version
+  # différente selon l'ordre d'arrivée.
+  notes:
+    name: Note de version
+    runs-on: ubuntu-latest
+    outputs:
+      body: ${{ steps.build.outputs.body }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rédiger la note
+        id: build
+        run: node scripts/release-notes.mjs "${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: ${{ matrix.label }}
+    needs: notes
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-22.04
+            label: Linux (deb, AppImage)
+            target: ''
+            rust-target: ''
+          # Les deux versions macOS sortent du même runner Apple Silicon :
+          # Rust sait produire un binaire Intel en croisé, et les images
+          # `macos-13` sont en fin de vie.
+          - os: macos-latest
+            label: macOS (Apple Silicon)
+            target: '--target aarch64-apple-darwin'
+            rust-target: 'aarch64-apple-darwin'
+          - os: macos-latest
+            label: macOS (Intel)
+            target: '--target x86_64-apple-darwin'
+            rust-target: 'x86_64-apple-darwin'
+          - os: windows-latest
+            label: Windows (msi, exe)
+            target: ''
+            rust-target: ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Dépendances système de Tauri v2 sous Linux. ffmpeg n'est pas empaqueté :
+      # il reste une dépendance d'exécution, que l'application sait installer.
+      - name: Dépendances Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libxcb1-dev \
+            libxdo-dev \
+            libssl-dev \
+            build-essential \
+            file
+
+      # Vite 8 exige `^20.19 || >=22.12` : on prend la branche LTS suivante
+      # plutôt que de frôler le minimum.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Chaîne Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust-target }}
+
+      - name: Cache Rust
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - run: npm ci
+
+      # Les tests qui exigent un écran, une caméra ou ffmpeg sont marqués
+      # `#[ignore]` : seuls les tests unitaires tournent ici.
+      - name: Tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml --lib
+
+      - name: Compilation et empaquetage
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: FastCap ${{ github.ref_name }}
+          releaseBody: ${{ needs.notes.outputs.body }}
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.target }}
