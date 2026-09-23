@@ -119,8 +119,9 @@ pub fn input_args(source: &Source, fps: u32, draw_mouse: bool) -> Vec<String> {
     #[cfg(target_os = "macos")]
     {
         // AVFoundation ne sait filmer qu'un écran entier : la zone est
-        // découpée ensuite par le graphe de filtres.
-        let _ = mouse;
+        // découpée ensuite par le graphe de filtres, d'où une source ignorée
+        // ici (voir `needs_software_crop`).
+        let _ = (mouse, source);
         vec![
             "-f".to_string(),
             "avfoundation".to_string(),
@@ -153,13 +154,28 @@ mod tests {
         })
     }
 
+    /// Le contrat n'est pas le même partout : seuls `x11grab` et `gdigrab`
+    /// savent se limiter à une zone. Sous macOS, l'entrée couvre tout l'écran
+    /// et le recadrage revient au graphe de filtres — c'est précisément ce
+    /// qu'annonce `needs_software_crop`.
     #[test]
     fn an_area_capture_carries_its_size_and_offset() {
         let args = input_args(&area(100, 80, 640, 480), 24, true);
         let joined = args.join(" ");
 
-        assert!(joined.contains("640x480"), "taille absente: {joined}");
         assert!(joined.contains("24"), "cadence absente: {joined}");
+
+        #[cfg(target_os = "macos")]
+        {
+            assert!(needs_software_crop(), "le recadrage logiciel est attendu");
+            assert!(joined.contains("avfoundation"), "entrée inattendue: {joined}");
+        }
+
+        #[cfg(not(target_os = "macos"))]
+        {
+            assert!(!needs_software_crop(), "le grabber sait déjà se limiter");
+            assert!(joined.contains("640x480"), "taille absente: {joined}");
+        }
 
         #[cfg(target_os = "linux")]
         assert!(joined.contains("+100,80"), "décalage absent: {joined}");
